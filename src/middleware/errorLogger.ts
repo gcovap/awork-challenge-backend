@@ -12,7 +12,6 @@ export const errorLogger = (
   res: Response,
   next: NextFunction
 ) => {
-  // Log error details
   logger.error('Error processing request', {
     error: {
       message: error.message,
@@ -28,6 +27,5 @@ export const errorLogger = (
     },
   });
 
-  // Pass error to next error handler
   next(error);
 }; 

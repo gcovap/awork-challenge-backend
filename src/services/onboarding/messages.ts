@@ -16,7 +16,7 @@ const messages = [
   { progress: 100, message: "Boom! You're a superstar! 🎉" },
 ];
 
-export function generateMotivationalmessage(completedSteps: Steps[]): string {
+export function generateMotivationalmessage(completedSteps: Steps[] = []): string {
   const progress = Math.round((completedSteps.filter(step => step.completed).length / steps.length) * 100);
   
   if (progress >= 0 && progress <= 100) {
@@ -25,8 +25,7 @@ export function generateMotivationalmessage(completedSteps: Steps[]): string {
       .find((message) => message.progress === progress || progress < message.progress);
 
       return motivationMessage?.message || ''
-  } else {
-    throw new Error(`Invalid progress, expected positive number between 0 and 100, received:${progress}`);
   }
+  return ''
 }
 

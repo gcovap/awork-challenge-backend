@@ -2,12 +2,15 @@ import winston from 'winston';
 
 const { combine, timestamp, printf, colorize, errors } = winston.format;
 
-const logFormat = printf(({ level, message, timestamp, stack }) => {
-  return `${timestamp} ${level}: ${stack || message}`;
+const logFormat = printf(({ level, message, timestamp, stack, ...rest}) => {
+  const restString = Object.keys(rest).length ? JSON.stringify(rest) : '';
+
+  return `${timestamp} ${level}: ${stack || message} ${restString}`;
 });
 
 const logger = winston.createLogger({
   level: process.env.LOG_LEVEL || 'info',
+
   format: combine(
     errors({ stack: true }),
     timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),

@@ -21,10 +21,12 @@ onboardingRouter.get("/init", (req: OnboardingRequest, res: Response) => {
   let userId = req.cookies.userId;
   if (!userId) {
     userId = randomUUID();
+
     res.cookie("userId", userId, {
       httpOnly: true,
-      sameSite: "strict",
-      secure: process.env.NODE_ENV === "production",
+      secure: true, 
+      sameSite: "none",
+      path: "/",
     });
     logger.info("New user created:", userId);
   }
@@ -49,11 +51,11 @@ onboardingRouter.post("/progress", (req: OnboardingRequest, res: Response) => {
 
   userStore[userId].steps = steps;
 
-  logger.info(`User ${userId} progress updated, steps`);
   const motivationMessage = generateMotivationalmessage(
     steps.filter((item) => item.completed)
   );
-
+  
+  logger.debug(`User ${userId} progress updated`);
   res.json({ userId, steps, motivationMessage });
 });
 

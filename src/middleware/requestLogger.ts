@@ -1,24 +1,23 @@
 import { Request, Response, NextFunction } from 'express';
+import geoip from 'geoip-lite';
 import { logger } from '../utils/logger';
 
 export const requestLogger = (req: Request, res: Response, next: NextFunction) => {
-  // Log request details
-  logger.info(`Incoming ${req.method} request to ${req.url}`, {
-    method: req.method,
-    url: req.url,
-    ip: req.ip,
-    userAgent: req.get('user-agent'),
-  });
+  const ip = req.ip || '';
+  const geo = geoip.lookup(ip);
+  const userId = req.cookies.userId || 'unknown'
 
-  // Get start time
+  logger.info(`${req.method} user:[${userId}] Start, url: ${req.url}, from:`, {
+    ip: ip,
+    device: req.get('user-agent'),
+    location: geo ? `${geo.city}, ${geo.country}` : 'Location not found',
+  });
   const start = Date.now();
 
-  // Log response details once the request is complete
   res.on('finish', () => {
     const duration = Date.now() - start;
-    logger.info(`Request completed ${req.method} ${req.url}`, {
-      method: req.method,
-      url: req.url,
+
+    logger.info(`${req.method} user:[${userId}] End, url: ${req.url}`, {
       status: res.statusCode,
       duration: `${duration}ms`,
     });

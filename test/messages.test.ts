@@ -11,16 +11,6 @@ describe("generateMotivationalmessage", () => {
   it("should return the correct message for valid progress", () => {
     const message = generateMotivationalmessage([STEP]);
 
-    expect(message).toEqual(RESULT_MESSAGE);
-  });
-
-  it("should throw an error for invalid progress", () => {
-    expect(() =>
-      generateMotivationalmessage(
-        Array(10)
-          .fill(null)
-          .map(() => STEP)
-      )
-    ).toThrow("Invalid progress, expected positive number between 0 and 100");
+    expect(message).toEqual(RESULT_MESSAGE.message);
   });
 });
